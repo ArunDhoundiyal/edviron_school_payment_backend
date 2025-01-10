@@ -128,6 +128,35 @@ serverInstance.post('/login', async(request, response)=>{
     }}
 )
 
+// user profile
+server_instance.get(
+  "/user/profile",
+  authenticateToken,
+  async (request, response) => {
+    const { email } = request;
+    try {
+      const getUserDataQuery = `SELECT * FROM user WHERE email = ?;`;
+      const getUserData = await dataBase.get(getUserDataQuery, [email]);
+
+      if (getUserData) {
+        response.status(200).json({
+          user_detail: {
+            name: getUserData.user_name,
+            email: getUserData.email,
+          },
+        });
+      } else {
+        response.status(404).json({ error: "User not found" });
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      response.status(500).json(`Error-message: ${error.message}`);
+    }
+  }
+);
+
+
+
 // Fetch all Transactions
 serverInstance.get('/transaction', authenticateToken, async(request, response)=>{
     const {status, startDate, endDate, pageNo} = request.query
