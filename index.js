@@ -129,7 +129,7 @@ serverInstance.post('/login', async(request, response)=>{
 )
 
 // user profile
-server_instance.get(
+serverInstance.get(
   "/user/profile",
   authenticateToken,
   async (request, response) => {
